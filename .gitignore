@@ -1,24 +1,33 @@
-# Logs
-logs
+# Node
+node_modules/
+web/dist/
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# .NET
+bin/
+obj/
+*.user
+.vs/
+
+# Build output: the SPA is built into the API's wwwroot
+server/src/Kanban.Api/wwwroot/
+
+# Runtime data: SQLite database and Data Protection keys (secrets!)
+App_Data/
+*.db
+*.db-shm
+*.db-wal
+
+# Local env / secrets
+.env
+.env.*
 *.local
+appsettings.*.local.json
 
-# Editor directories and files
+# Editors / OS
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+Thumbs.db

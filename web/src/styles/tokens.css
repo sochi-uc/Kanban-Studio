@@ -1,0 +1,114 @@
+/* ==========================================================================
+   Design tokens — Liquid Glass
+   One token set for both appearances via light-dark(); the active scheme comes from
+   color-scheme, which data-theme on <html> pins to light, dark, or the OS ("system").
+   ========================================================================== */
+
+:root {
+  color-scheme: light dark;
+
+  /* Type: the platform's own UI face (SF Pro on Apple, Segoe UI Variable on Windows).
+     No web-font download, no third-party request, nothing for the CSP to allow. */
+  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI Variable Display', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+
+  /* Concentric radii: each nested shape = parent radius − padding between them. */
+  --r-window: 24px;
+  --r-panel: 20px;
+  --r-card: 14px;
+  --r-control: 10px;
+  --r-chip: 7px;
+  --r-pill: 999px;
+
+  --gap: 12px;
+  --sidebar-w: 268px;
+  --inspector-w: 392px;
+
+  /* Motion: a gentle spring for glass, a fast ease for state changes. */
+  --ease-spring: cubic-bezier(0.32, 1.25, 0.42, 1);
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --t-fast: 140ms;
+  --t-med: 260ms;
+
+  /* ---- Ink ---- */
+  --text: light-dark(#1d1d1f, #f5f5f7);
+  --text-2: light-dark(#4a4a52, #b4b4bd);
+  --text-3: light-dark(#6e6e78, #8c8c96);
+  --accent: light-dark(#0a66d8, #3d9bff);
+  --accent-ink: #ffffff;
+  --accent-soft: light-dark(rgb(10 102 216 / 0.12), rgb(61 155 255 / 0.18));
+  --focus: light-dark(#0a66d8, #66b2ff);
+  --danger: light-dark(#c4262e, #ff6b6b);
+  --good: light-dark(#13804f, #34d58a);
+
+  /* ---- Wallpaper (the content the glass refracts) ---- */
+  --bg: light-dark(#eef1f6, #0b0c10);
+  --glow-1: light-dark(rgb(90 150 255 / 0.30), rgb(48 110 255 / 0.30));
+  --glow-2: light-dark(rgb(180 130 255 / 0.26), rgb(140 80 255 / 0.24));
+  --glow-3: light-dark(rgb(80 210 180 / 0.22), rgb(20 170 140 / 0.16));
+
+  /* ---- Glass (navigation / control layer only) ---- */
+  --glass-fill: light-dark(rgb(255 255 255 / 0.56), rgb(28 30 38 / 0.56));
+  --glass-fill-strong: light-dark(rgb(255 255 255 / 0.78), rgb(24 26 33 / 0.80));
+  --glass-solid: light-dark(#f7f8fb, #1b1c22);
+  --glass-edge: light-dark(rgb(255 255 255 / 0.70), rgb(255 255 255 / 0.12));
+  --glass-rim: light-dark(rgb(0 0 0 / 0.06), rgb(0 0 0 / 0.45));
+  --glass-specular: light-dark(rgb(255 255 255 / 0.95), rgb(255 255 255 / 0.22));
+  --glass-sheen: light-dark(rgb(255 255 255 / 0.40), rgb(255 255 255 / 0.06));
+  --glass-blur: 28px;
+  --glass-saturate: 180%;
+
+  /* ---- Content surfaces (solid: no backdrop-filter on content) ---- */
+  --surface: light-dark(rgb(255 255 255 / 0.92), rgb(30 31 38 / 0.92));
+  --surface-hover: light-dark(#ffffff, rgb(38 40 48 / 0.96));
+  --surface-sunken: light-dark(rgb(255 255 255 / 0.34), rgb(255 255 255 / 0.035));
+  --hairline: light-dark(rgb(0 0 0 / 0.08), rgb(255 255 255 / 0.08));
+  --hairline-strong: light-dark(rgb(0 0 0 / 0.14), rgb(255 255 255 / 0.16));
+  --fill-1: light-dark(rgb(0 0 0 / 0.045), rgb(255 255 255 / 0.06));
+  --fill-2: light-dark(rgb(0 0 0 / 0.08), rgb(255 255 255 / 0.11));
+
+  --shadow-card: 0 1px 2px light-dark(rgb(16 24 40 / 0.06), rgb(0 0 0 / 0.4)),
+    0 4px 14px -6px light-dark(rgb(16 24 40 / 0.10), rgb(0 0 0 / 0.5));
+  --shadow-lift: 0 2px 4px light-dark(rgb(16 24 40 / 0.06), rgb(0 0 0 / 0.4)),
+    0 14px 32px -10px light-dark(rgb(16 24 40 / 0.20), rgb(0 0 0 / 0.65));
+  --shadow-float: 0 24px 60px -18px light-dark(rgb(16 24 40 / 0.28), rgb(0 0 0 / 0.75)),
+    0 2px 8px light-dark(rgb(16 24 40 / 0.06), rgb(0 0 0 / 0.35));
+
+  /* ---- Lanes: categorical palette, validated (lightness band, chroma, CVD ΔE ≥ 9) in both modes ---- */
+  --lane-backlog: light-dark(#6250d6, #9085e9);
+  --lane-todo: light-dark(#eda100, #c98500);
+  --lane-in-progress: light-dark(#2a78d6, #3987e5);
+  --lane-review: light-dark(#eb6834, #d95926);
+  --lane-done: light-dark(#1baf7a, #199e70);
+
+  /* ---- Priority (status family; always paired with code + label) ---- */
+  --prio-critical: light-dark(#c4262e, #ff6b6b);
+  --prio-high: light-dark(#b85400, #ff9f43);
+  --prio-medium: light-dark(#1f63c4, #6aa8ff);
+  --prio-low: light-dark(#6e6e78, #9a9aa5);
+
+  /* ---- Member hues ---- */
+  --hue-indigo: light-dark(#3b3fd8, #9ea4ff);
+  --hue-green: light-dark(#13804f, #5fe0a3);
+  --hue-amber: light-dark(#a15c00, #ffc266);
+  --hue-violet: light-dark(#7a35d4, #c9a2ff);
+  --hue-neutral: light-dark(#5f6470, #b0b4be);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+/* Increased contrast: firmer edges and ink. */
+@media (prefers-contrast: more) {
+  :root {
+    --text-2: light-dark(#2c2c33, #dcdce2);
+    --text-3: light-dark(#45454d, #b9b9c2);
+    --hairline: light-dark(rgb(0 0 0 / 0.28), rgb(255 255 255 / 0.32));
+    --glass-edge: light-dark(rgb(0 0 0 / 0.30), rgb(255 255 255 / 0.40));
+  }
+}

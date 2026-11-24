@@ -1,0 +1,435 @@
+/* ==========================================================================
+   Controls: buttons, dropdowns, icon tints.
+   Loaded last; this is the single source of truth for interactive control styling.
+   ========================================================================== */
+
+:root {
+  --btn-bg: light-dark(rgb(255 255 255 / 0.72), rgb(255 255 255 / 0.07));
+  --btn-bg-hover: light-dark(rgb(255 255 255 / 0.95), rgb(255 255 255 / 0.12));
+  --btn-bg-active: light-dark(rgb(240 242 246 / 1), rgb(255 255 255 / 0.05));
+  --btn-edge: light-dark(rgb(0 0 0 / 0.09), rgb(255 255 255 / 0.10));
+  --btn-shine: light-dark(rgb(255 255 255 / 1), rgb(255 255 255 / 0.10));
+  --ring: 0 0 0 3px color-mix(in oklab, var(--focus) 35%, transparent);
+}
+
+/* ---------------------------------------------------------------- Buttons */
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 15px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--btn-edge);
+  background: var(--btn-bg);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  box-shadow:
+    inset 0 1px 0 var(--btn-shine),
+    0 1px 2px light-dark(rgb(16 24 40 / 0.06), rgb(0 0 0 / 0.3));
+  transition:
+    background var(--t-fast) var(--ease-out),
+    box-shadow var(--t-fast) var(--ease-out),
+    border-color var(--t-fast),
+    transform 320ms var(--ease-spring),
+    opacity var(--t-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:hover:not(:disabled) {
+  background: var(--btn-bg-hover);
+  box-shadow:
+    inset 0 1px 0 var(--btn-shine),
+    0 3px 10px -3px light-dark(rgb(16 24 40 / 0.16), rgb(0 0 0 / 0.5));
+}
+.btn:active:not(:disabled) {
+  background: var(--btn-bg-active);
+  transform: scale(0.965);
+  transition-duration: 80ms;
+}
+.btn:focus-visible {
+  outline: none;
+  box-shadow: inset 0 1px 0 var(--btn-shine), var(--ring);
+}
+.btn:disabled {
+  opacity: 0.45;
+  box-shadow: none;
+}
+.btn > svg {
+  flex: none;
+}
+
+/* Primary: tinted liquid glass — accent fill, specular top edge, soft coloured glow. */
+.btn--primary {
+  color: #fff;
+  border-color: color-mix(in oklab, var(--accent) 75%, black);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.22), rgb(255 255 255 / 0) 55%),
+    var(--accent);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.4),
+    inset 0 -1px 0 rgb(0 0 0 / 0.12),
+    0 4px 14px -4px color-mix(in oklab, var(--accent) 70%, transparent);
+  text-shadow: 0 1px 0 rgb(0 0 0 / 0.12);
+}
+.btn--primary:hover:not(:disabled) {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.3), rgb(255 255 255 / 0) 55%),
+    color-mix(in oklab, var(--accent) 92%, white);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.45),
+    inset 0 -1px 0 rgb(0 0 0 / 0.12),
+    0 8px 22px -6px color-mix(in oklab, var(--accent) 80%, transparent);
+}
+.btn--primary:active:not(:disabled) {
+  background: color-mix(in oklab, var(--accent) 88%, black);
+}
+.btn--primary:focus-visible {
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.4), var(--ring);
+}
+
+.btn--danger {
+  color: #fff;
+  border-color: color-mix(in oklab, var(--danger) 75%, black);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.2), rgb(255 255 255 / 0) 55%),
+    var(--danger);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.35),
+    0 4px 14px -4px color-mix(in oklab, var(--danger) 60%, transparent);
+}
+.btn--danger:hover:not(:disabled) {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.26), rgb(255 255 255 / 0) 55%),
+    color-mix(in oklab, var(--danger) 92%, white);
+}
+
+.btn--plain,
+.btn--ghost {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--text-2);
+}
+.btn--plain:hover:not(:disabled),
+.btn--ghost:hover:not(:disabled) {
+  background: var(--fill-1);
+  color: var(--text);
+  box-shadow: none;
+}
+
+.btn--sm {
+  height: 28px;
+  padding: 0 11px;
+  font-size: 12px;
+  gap: 5px;
+}
+.btn--lg {
+  height: 42px;
+  padding: 0 20px;
+  font-size: 14px;
+}
+.btn--block {
+  width: 100%;
+}
+.btn kbd {
+  margin-left: auto;
+  background: rgb(255 255 255 / 0.18);
+  border-color: rgb(255 255 255 / 0.25);
+  color: inherit;
+}
+
+/* Loading: keeps width stable, swaps label for a spinner. */
+.btn[aria-busy='true'] {
+  color: transparent !important;
+  text-shadow: none;
+  pointer-events: none;
+}
+.btn[aria-busy='true']::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-color: rgb(255 255 255 / 0.35);
+  border-top-color: #fff;
+  animation: spin 0.7s linear infinite;
+}
+.btn:not(.btn--primary):not(.btn--danger)[aria-busy='true']::after {
+  border-color: var(--fill-2);
+  border-top-color: var(--text-2);
+}
+
+/* Icon buttons: circular, quiet until hovered, springy press. */
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-pill);
+  color: var(--text-2);
+  transition:
+    background var(--t-fast) var(--ease-out),
+    color var(--t-fast),
+    transform 320ms var(--ease-spring);
+}
+.icon-btn:hover {
+  background: var(--fill-1);
+  color: var(--text);
+}
+.icon-btn:active {
+  transform: scale(0.9);
+  transition-duration: 80ms;
+}
+.icon-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+}
+.icon-btn--sm {
+  width: 26px;
+  height: 26px;
+}
+.icon-btn--xs {
+  width: 22px;
+  height: 22px;
+}
+.toolbar-new.btn {
+  height: 36px;
+}
+.toolbar-new.btn--primary {
+  padding: 0 16px 0 13px;
+}
+@container canvas (max-width: 760px) {
+  .toolbar-new.btn--primary {
+    width: 36px;
+    padding: 0;
+  }
+}
+
+/* ---------------------------------------------------------------- Dropdown (ui/Select.jsx) */
+
+.dd {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  height: 34px;
+  padding: 0 8px 0 11px;
+  border-radius: var(--r-control);
+  border: 1px solid var(--btn-edge);
+  background: var(--btn-bg);
+  box-shadow: inset 0 1px 0 var(--btn-shine);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    box-shadow var(--t-fast);
+}
+.dd:hover:not(:disabled) {
+  background: var(--btn-bg-hover);
+  border-color: var(--hairline-strong);
+}
+.dd:focus-visible,
+.dd.is-open {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: inset 0 1px 0 var(--btn-shine), var(--ring);
+}
+.dd:disabled {
+  opacity: 0.5;
+}
+.dd--field {
+  width: 100%;
+}
+.dd--pill {
+  border-radius: var(--r-pill);
+  height: 36px;
+  padding: 0 10px 0 13px;
+}
+.dd--ghost {
+  height: 30px;
+  padding: 0 6px 0 8px;
+  margin-left: -8px;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+.dd--ghost:hover:not(:disabled) {
+  background: var(--fill-1);
+  border-color: transparent;
+}
+.dd-icon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 18px;
+}
+.dd-lead {
+  color: var(--text-3);
+  flex: none;
+}
+.dd-value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dd-value.is-placeholder {
+  color: var(--text-3);
+}
+.dd-chevron {
+  flex: none;
+  color: var(--text-3);
+  transition: color var(--t-fast);
+}
+.dd:hover .dd-chevron,
+.dd.is-open .dd-chevron {
+  color: var(--text-2);
+}
+.dd--ghost .dd-chevron {
+  opacity: 0;
+}
+.dd--ghost:hover .dd-chevron,
+.dd--ghost:focus-visible .dd-chevron,
+.dd--ghost.is-open .dd-chevron {
+  opacity: 1;
+}
+
+/* Table status pill: tinted by lane. */
+.dd--pill[class*='lane-'] {
+  height: 28px;
+  padding: 0 8px 0 9px;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  background: color-mix(in oklab, var(--lane) 13%, transparent);
+  border-color: color-mix(in oklab, var(--lane) 28%, transparent);
+  box-shadow: none;
+}
+.dd--pill[class*='lane-'] .dd-icon {
+  width: 14px;
+}
+
+.dd-list {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  padding: 5px;
+  border-radius: 14px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  outline: none;
+  color: var(--text);
+  background-color: var(--glass-fill-strong);
+  opacity: 1;
+  transform: none;
+  transform-origin: top center;
+  transition:
+    opacity 120ms var(--ease-out),
+    transform 260ms var(--ease-spring),
+    overlay 200ms allow-discrete,
+    display 200ms allow-discrete;
+}
+@starting-style {
+  .dd-list:popover-open {
+    opacity: 0;
+    transform: scale(0.96) translateY(-4px);
+  }
+}
+.dd-option {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 34px;
+  padding: 0 10px 0 8px;
+  border-radius: 9px;
+  font-size: 13px;
+  cursor: default;
+  user-select: none;
+}
+.dd-option.is-active {
+  background: var(--accent-soft);
+}
+.dd-option.is-selected {
+  font-weight: 600;
+}
+.dd-label {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dd-hint {
+  font-size: 11.5px;
+  color: var(--text-3);
+  font-weight: 400;
+  white-space: nowrap;
+}
+.dd-check {
+  flex: none;
+  color: var(--accent);
+  visibility: hidden;
+}
+.dd-option.is-selected .dd-check {
+  visibility: visible;
+}
+
+/* Props grid in the inspector now hosts ghost dropdowns. */
+.prop dd {
+  display: flex;
+  align-items: center;
+}
+.prop dt svg {
+  flex: none;
+}
+
+/* ---------------------------------------------------------------- Icon tints */
+
+.status-icon {
+  flex: none;
+  color: var(--lane);
+  --on-lane: light-dark(#fff, #0b0c10);
+}
+.prio-icon {
+  flex: none;
+  color: var(--prio-medium);
+}
+.prio-icon--critical { color: var(--prio-critical); }
+.prio-icon--high { color: var(--prio-high); }
+.prio-icon--medium { color: var(--prio-medium); }
+.prio-icon--low { color: var(--prio-low); }
+.prio svg {
+  color: inherit;
+}
+.prio .prio-icon--critical { color: var(--prio-critical); }
+.prio .prio-icon--high { color: var(--prio-high); }
+
+.brand-svg {
+  flex: none;
+  border-radius: 9px;
+  box-shadow: 0 4px 12px -4px rgb(91 110 255 / 0.6);
+}
+.auth-mark {
+  width: auto;
+  height: auto;
+  background: none;
+  box-shadow: none;
+  margin-bottom: 10px;
+}
+.auth-mark .brand-svg {
+  border-radius: 16px;
+  box-shadow: 0 14px 30px -10px rgb(91 110 255 / 0.7);
+}
