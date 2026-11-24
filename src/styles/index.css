@@ -1,0 +1,1483 @@
+/* ============================================================
+   index.css — Platview Sprint Kanban Studio Design System
+   
+   Notion & TickTick Aesthetic Synthesis
+   - Notion Soft Minimal Canvas & Database Tabs
+   - TickTick Collapsible Navigation Sidebar & Right Slide-Over Inspector
+   - Interactive Checklists, Subtask Progress Bars & Telemetry HUD
+   - Dual-Mode: Notion Light (#FFFFFF / #F7F6F3) | Notion Dark (#191919 / #202020)
+   ============================================================ */
+
+/* --- CSS Reset & Global Base --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Brand Constants */
+  --pv-navy: #000073;
+  --pv-green: #0F9347;
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif;
+  --font-mono: 'Fira Code', "SF Mono", Menlo, Monaco, Consolas, monospace;
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-drawer: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Notion Light Theme (Default) */
+:root, [data-theme="light"] {
+  --bg-app: #FFFFFF;
+  --bg-canvas: #FFFFFF;
+  --bg-sidebar: #F7F6F3;
+  --bg-sidebar-hover: rgba(55, 53, 47, 0.06);
+  --bg-sidebar-active: rgba(55, 53, 47, 0.1);
+  --bg-column: #F7F6F3;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #FFFFFF;
+  --bg-drawer: #FFFFFF;
+  --bg-input: #FFFFFF;
+  --bg-hover: rgba(55, 53, 47, 0.05);
+
+  --text-primary: #37352F;
+  --text-secondary: #787774;
+  --text-tertiary: #9B9A97;
+  --text-link: #0071E3;
+
+  --border-subtle: rgba(55, 53, 47, 0.07);
+  --border-medium: rgba(55, 53, 47, 0.14);
+  --border-focus: #2383E2;
+
+  --shadow-card: 0 1px 3px rgba(15, 15, 15, 0.06), 0 0 0 1px rgba(15, 15, 15, 0.05);
+  --shadow-card-hover: 0 4px 12px rgba(15, 15, 15, 0.1), 0 0 0 1px rgba(15, 15, 15, 0.08);
+  --shadow-drawer: -4px 0 24px rgba(0, 0, 0, 0.12), -1px 0 0 rgba(55, 53, 47, 0.09);
+  --shadow-modal: 0 20px 48px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(55, 53, 47, 0.08);
+
+  --notion-blue: #2383E2;
+  --notion-blue-hover: #1970C8;
+  --notion-blue-bg: rgba(35, 131, 226, 0.1);
+}
+
+/* Notion Dark Theme */
+[data-theme="dark"] {
+  --bg-app: #191919;
+  --bg-canvas: #191919;
+  --bg-sidebar: #202020;
+  --bg-sidebar-hover: rgba(255, 255, 255, 0.055);
+  --bg-sidebar-active: rgba(255, 255, 255, 0.09);
+  --bg-column: #202020;
+  --bg-card: #262626;
+  --bg-card-hover: #2D2D2D;
+  --bg-drawer: #202020;
+  --bg-input: #262626;
+  --bg-hover: rgba(255, 255, 255, 0.05);
+
+  --text-primary: #D4D4D4;
+  --text-secondary: #9B9B9B;
+  --text-tertiary: #6E6E6E;
+  --text-link: #529CCA;
+
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-medium: rgba(255, 255, 255, 0.12);
+  --border-focus: #529CCA;
+
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --shadow-card-hover: 0 6px 16px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  --shadow-drawer: -6px 0 32px rgba(0, 0, 0, 0.7), -1px 0 0 rgba(255, 255, 255, 0.08);
+  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.1);
+
+  --notion-blue: #0A84FF;
+  --notion-blue-hover: #0070E0;
+  --notion-blue-bg: rgba(10, 132, 255, 0.15);
+}
+
+/* Base Body */
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Thin Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* App Main Layout Grid: Sidebar + Canvas + (Optional Drawer) */
+.app-layout {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-app);
+}
+
+/* ============================================================
+   1. TickTick Left Navigation Sidebar
+   ============================================================ */
+.ticktick-sidebar {
+  width: 250px;
+  height: 100%;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  user-select: none;
+  transition: width var(--transition-drawer) ease;
+  z-index: 30;
+}
+
+.ticktick-sidebar--collapsed {
+  width: 56px;
+  align-items: center;
+  padding: 14px 0;
+}
+
+.sidebar-profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.profile-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: var(--pv-navy);
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 11.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.profile-workspace {
+  font-size: 10.5px;
+  color: var(--text-tertiary);
+}
+
+.sidebar-collapse-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-collapse-btn:hover {
+  background: var(--bg-sidebar-hover);
+  color: var(--text-primary);
+}
+
+/* Sidebar Quick Add Button */
+.sidebar-quick-add-wrap {
+  padding: 10px 14px;
+}
+
+.sidebar-quick-add-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast) ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.sidebar-quick-add-btn:hover {
+  border-color: var(--notion-blue);
+  color: var(--notion-blue);
+  box-shadow: 0 0 0 2px var(--notion-blue-bg);
+}
+
+.sidebar-kbd {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  background: var(--bg-sidebar-hover);
+  padding: 1px 5px;
+  border-radius: var(--radius-xs);
+}
+
+/* Sidebar Scrollable Body */
+.sidebar-scrollable-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+}
+
+.sidebar-group-title {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+}
+
+.sidebar-reset-filter-btn {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--notion-blue);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.sidebar-nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-nav-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast) ease;
+  text-align: left;
+}
+
+.sidebar-nav-item:hover {
+  background: var(--bg-sidebar-hover);
+  color: var(--text-primary);
+}
+
+.sidebar-nav-item--active {
+  background: var(--bg-sidebar-active);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.nav-item-icon {
+  font-size: 14px;
+}
+
+.nav-item-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-item-badge {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-tertiary);
+}
+
+.nav-item-avatar {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tag-hash {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  padding: 10px 14px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-footer-btn {
+  width: 100%;
+  padding: 6px 10px;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.sidebar-footer-btn:hover {
+  background: var(--bg-sidebar-hover);
+  color: var(--text-primary);
+}
+
+.sidebar-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.sidebar-footer-link {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.sidebar-footer-link:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+
+/* Collapsed Sidebar Items */
+.sidebar-collapsed-icons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.sidebar-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-icon-btn:hover, .sidebar-icon-btn.active {
+  background: var(--bg-sidebar-active);
+}
+
+.sidebar-theme-btn-mini {
+  margin-top: auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-sidebar-hover);
+  cursor: pointer;
+}
+
+/* ============================================================
+   2. Main Notion Canvas (Center Viewport)
+   ============================================================ */
+.notion-main-canvas {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  background: var(--bg-canvas);
+}
+
+/* Notion Breadcrumbs & Page Header */
+.notion-header {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 28px 0 28px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-canvas);
+  gap: 8px;
+}
+
+.notion-breadcrumb-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.breadcrumb-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.breadcrumb-sidebar-toggle {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  margin-right: 4px;
+}
+
+.breadcrumb-sep {
+  color: var(--text-tertiary);
+}
+
+.breadcrumb-item--current {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.breadcrumb-right-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.breadcrumb-stat {
+  color: var(--text-tertiary);
+}
+
+.breadcrumb-stat--accent {
+  color: #10B981;
+  font-weight: 600;
+}
+
+.notion-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.notion-page-icon {
+  font-size: 24px;
+}
+
+.notion-page-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+
+/* Notion Toolbar & View Tabs */
+.notion-toolbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+}
+
+.notion-view-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.notion-view-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast) ease;
+}
+
+.notion-view-tab:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.notion-view-tab--active {
+  color: var(--text-primary);
+  border-bottom-color: var(--text-primary);
+  font-weight: 600;
+}
+
+.notion-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 6px;
+}
+
+.notion-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.notion-search-box svg {
+  position: absolute;
+  left: 8px;
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+.notion-search-input {
+  padding: 5px 26px 5px 26px;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  background: var(--bg-input);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  outline: none;
+  width: 180px;
+  transition: width var(--transition-fast) ease;
+}
+
+.notion-search-input:focus {
+  width: 240px;
+  border-color: var(--border-focus);
+}
+
+.notion-kbd {
+  position: absolute;
+  right: 7px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+.notion-sort-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.notion-sort-select {
+  padding: 4px 8px;
+  font-size: 11.5px;
+  font-family: var(--font-sans);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  outline: none;
+}
+
+.notion-new-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  background: var(--notion-blue);
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition-fast) ease;
+}
+
+.notion-new-btn:hover {
+  background: var(--notion-blue-hover);
+}
+
+/* ============================================================
+   3. Notion-Style Kanban Board Viewport
+   ============================================================ */
+.notion-kanban-viewport {
+  flex: 1;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 16px 28px;
+  gap: 16px;
+}
+
+.notion-columns-track {
+  display: flex;
+  gap: 16px;
+  height: 100%;
+  width: 100%;
+  min-width: 1280px;
+}
+
+.notion-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-column);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  min-width: 250px;
+  max-width: 320px;
+  transition: all var(--transition-fast) ease;
+  border: 1px solid transparent;
+}
+
+.notion-column.is-drag-over {
+  border-color: var(--border-focus);
+  background: var(--bg-hover);
+  box-shadow: 0 0 0 2px var(--notion-blue-bg);
+}
+
+.notion-column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  user-select: none;
+}
+
+.notion-col-header-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.notion-col-status-pill {
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.notion-col-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 600;
+}
+
+.notion-wip-pill {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: var(--radius-xs);
+  background: var(--border-subtle);
+  color: var(--text-tertiary);
+}
+
+.notion-wip-pill--exceeded {
+  background: rgba(239, 68, 68, 0.15);
+  color: #EF4444;
+  font-weight: 700;
+}
+
+.notion-col-header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.notion-col-pts {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-tertiary);
+}
+
+.notion-col-add-btn {
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  border-radius: var(--radius-xs);
+}
+
+.notion-col-add-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.notion-column-cards {
+  flex: 1;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.notion-empty-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 12px;
+  color: var(--text-tertiary);
+  font-size: 11.5px;
+  gap: 6px;
+}
+
+.notion-empty-add-btn {
+  background: none;
+  border: 1px dashed var(--border-medium);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.notion-empty-add-btn:hover {
+  color: var(--notion-blue);
+  border-color: var(--notion-blue);
+}
+
+.notion-col-bottom-new {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 6px 8px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-tertiary);
+  font-size: 12px;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.notion-col-bottom-new:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   4. Notion + TickTick Card Styling
+   ============================================================ */
+.notion-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform var(--transition-fast) ease, box-shadow var(--transition-fast) ease;
+}
+
+.notion-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-1px);
+}
+
+.notion-card.is-dragging {
+  opacity: 0.4;
+  border: 2px dashed var(--notion-blue);
+}
+
+.notion-card--completed {
+  opacity: 0.75;
+}
+
+.notion-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* TickTick Checkbox Circle */
+.ticktick-check-circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid var(--text-tertiary);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-size: 10px;
+  color: #FFFFFF;
+  transition: all var(--transition-fast) ease;
+}
+
+.ticktick-check-circle:hover {
+  border-color: var(--notion-blue);
+  background: var(--notion-blue-bg);
+}
+
+.ticktick-check-circle--checked {
+  background: #10B981 !important;
+  border-color: #10B981 !important;
+}
+
+.ticktick-check-circle--mini {
+  width: 14px;
+  height: 14px;
+  font-size: 8px;
+}
+
+.notion-card-title {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.notion-card-title--done {
+  text-decoration: line-through;
+  color: var(--text-tertiary);
+}
+
+.notion-card-desc {
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  padding-left: 24px;
+}
+
+/* Notion Property Chips on Card */
+.notion-card-props {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding-left: 24px;
+}
+
+.prop-chip {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.prop-chip--priority {
+  font-weight: 600;
+}
+
+.prop-chip--tag {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.prop-chip--points {
+  font-family: var(--font-mono);
+  background: var(--bg-hover);
+  color: var(--text-tertiary);
+}
+
+.prop-chip--subtasks {
+  font-family: var(--font-mono);
+  background: rgba(35, 131, 226, 0.08);
+  color: var(--notion-blue);
+}
+
+.prop-chip--subtasks-complete {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+}
+
+.prop-chip--date {
+  font-family: var(--font-mono);
+  background: var(--bg-hover);
+  color: var(--text-tertiary);
+}
+
+.notion-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: 2px;
+}
+
+.notion-card-assignee {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.assignee-mini-avatar {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 8.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assignee-mini-name {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.notion-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.notion-shift-btn {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-app);
+  color: var(--text-secondary);
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.notion-shift-btn:hover {
+  background: var(--notion-blue);
+  color: #FFFFFF;
+  border-color: var(--notion-blue);
+}
+
+.notion-shift-btn--del:hover {
+  background: #EF4444 !important;
+  border-color: #EF4444 !important;
+  color: #FFFFFF !important;
+}
+
+/* ============================================================
+   5. TickTick Slide-Over Right Inspector Drawer
+   ============================================================ */
+.ticktick-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 440px;
+  background: var(--bg-drawer);
+  box-shadow: var(--shadow-drawer);
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+  animation: drawerSlideIn var(--transition-drawer) ease;
+}
+
+@keyframes drawerSlideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.drawer-status-select {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.drawer-header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.drawer-icon-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drawer-icon-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.drawer-icon-btn--danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #EF4444;
+}
+
+.drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.drawer-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.drawer-title-input {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.drawer-title-input--strikethrough {
+  text-decoration: line-through;
+  color: var(--text-tertiary);
+}
+
+/* Notion-Style Drawer Properties Table */
+.drawer-properties-table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.drawer-prop-row {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 12px;
+}
+
+.drawer-prop-row:last-child {
+  border-bottom: none;
+}
+
+.prop-label {
+  width: 140px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.prop-value {
+  flex: 1;
+}
+
+.prop-select, .prop-date-input {
+  width: 100%;
+  padding: 3px 6px;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-xs);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.prop-select:hover, .prop-date-input:hover {
+  border-color: var(--border-medium);
+}
+
+/* Subtasks / Checklist Section (TickTick) */
+.drawer-subtasks-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: var(--bg-hover);
+  border-radius: var(--radius-md);
+}
+
+.subtasks-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.subtasks-title-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.subtasks-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.subtasks-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.subtask-progress-track {
+  width: 100%;
+  height: 4px;
+  background: var(--border-medium);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.subtask-progress-fill {
+  height: 100%;
+  background: #10B981;
+  transition: width var(--transition-fast) ease;
+}
+
+.subtask-items-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.subtask-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+  font-size: 12.5px;
+}
+
+.subtask-checkbox {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  accent-color: #10B981;
+}
+
+.subtask-text {
+  flex: 1;
+  color: var(--text-primary);
+}
+
+.subtask-text--done {
+  text-decoration: line-through;
+  color: var(--text-tertiary);
+}
+
+.subtask-delete-btn {
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--transition-fast) ease;
+}
+
+.subtask-item:hover .subtask-delete-btn {
+  opacity: 1;
+}
+
+.subtask-add-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.subtask-add-plus {
+  color: var(--text-tertiary);
+  font-size: 14px;
+}
+
+.subtask-add-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  font-size: 12px;
+  color: var(--text-primary);
+  outline: none;
+}
+
+.subtask-add-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* Notes Textarea (Notion) */
+.drawer-notes-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.notes-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.notes-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  outline: none;
+  resize: vertical;
+}
+
+.notes-textarea:focus {
+  border-color: var(--border-focus);
+}
+
+/* Audit Footer */
+.drawer-audit-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 11px;
+}
+
+.audit-sync-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  color: #10B981;
+}
+
+.audit-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10B981;
+}
+
+.audit-timestamp {
+  color: var(--text-tertiary);
+}
+
+/* ============================================================
+   6. Notion Table View
+   ============================================================ */
+.notion-table-container {
+  flex: 1;
+  overflow: auto;
+  padding: 16px 28px;
+}
+
+.notion-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  user-select: none;
+}
+
+.notion-table th {
+  padding: 8px 10px;
+  text-align: left;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-medium);
+  background: var(--bg-canvas);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.notion-table-row {
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background var(--transition-fast) ease;
+}
+
+.notion-table-row:hover {
+  background: var(--bg-hover);
+}
+
+.notion-table td {
+  padding: 7px 10px;
+  vertical-align: middle;
+}
+
+.notion-table-title-cell {
+  cursor: pointer;
+}
+
+.table-title-text {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.table-title-text--done {
+  text-decoration: line-through;
+  color: var(--text-tertiary);
+}
+
+.notion-status-pill-select {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.table-priority-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.table-assignee-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+}
+
+.table-tag-badge {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.table-row-delete-btn {
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--transition-fast) ease;
+}
+
+.notion-table-row:hover .table-row-delete-btn {
+  opacity: 1;
+}
+
+.table-row-delete-btn:hover {
+  color: #EF4444;
+}

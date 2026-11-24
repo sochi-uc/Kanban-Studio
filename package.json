@@ -1,0 +1,20 @@
+{
+  "name": "kanban-studio",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Enterprise Sprint Kanban Studio with Real-Time Drag-and-Drop, Apple Cupertino HIG Design, and Simulated ASP.NET Core 10 Minimal API Full-Stack Bridge.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.7"
+  }
+}
