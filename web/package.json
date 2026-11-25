@@ -1,0 +1,24 @@
+{
+  "name": "kanban-studio-web",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Kanban Studio web client: React 19 + Vite, Liquid Glass UI, served by the ASP.NET Core 10 API.",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "audit": "npm audit --audit-level=low"
+  },
+  "dependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.3.0",
+    "vite": "^8.3.8"
+  }
+}
